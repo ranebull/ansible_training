@@ -1,0 +1,76 @@
+- hosts: all
+  vars_files:
+    - defaults/main.yml
+  tasks:
+    - name: upgrade all packages
+      yum:
+        name: '*'
+        state: latest
+  
+    - name: enable some repos
+      shell: yum-config-manager --enable ol7_developer_EPEL ol7_addons ol7_optional_latest
+
+    - name: install additional packages
+      yum:
+        name: 
+          - ncdu
+          - mc
+          - htop
+          - atop
+          - tmux
+          - screen
+          - sysstat
+          - iotop
+          - lsof
+          - tcpdump
+          - nmap
+          - nano
+          - vim
+          - telnet
+          - strace
+          - ltrace
+          - gdisk
+          - traceroute
+          - lsscsi 
+          - pciutils
+          - net-tools  
+          - sysfsutils
+          - elinks
+          - kexec-tools
+          - redhat-lsb-core
+          - bind-utils
+          - sos
+          - lynis
+          - policycoreutils-python
+          - smem
+          - setools-console
+          - blktrace
+          - yum-plugin-remove-with-leaves
+          - rsyslog-relp
+          
+    - name: add color ip output to global alias
+      copy:
+        dest: "/etc/profile.d/colorip.sh"
+        content: |
+          alias ip='ip --color'
+          alias ipb='ip --color --brief'
+
+    - name: generate sshd config 
+      template:
+        src: "sshd_config.j2"
+        dest: "/etc/ssh/sshd_config"
+        owner: "root"
+        group: "root"
+        mode: "0644"
+      notify: 
+        - test sshd config
+        - restart sshd
+
+  handlers:
+    - name: test sshd config
+      command: sshd -t
+
+    - name: restart sshd
+      service: 
+        name: sshd
+        state: restarted  
