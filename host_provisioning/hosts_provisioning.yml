@@ -47,6 +47,7 @@
           - blktrace
           - yum-plugin-remove-with-leaves
           - rsyslog-relp
+          - wget
           
     - name: add color ip output to global alias
       copy:
@@ -55,6 +56,12 @@
           alias ip='ip --color'
           alias ipb='ip --color --brief'
 
+    - name: change ll alias
+      replace:
+        path: /etc/profile.d/colorls.sh
+        regexp: 'ls -l'
+        replace: 'ls -al'
+        
     - name: generate sshd config 
       template:
         src: "sshd_config.j2"
