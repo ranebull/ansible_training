@@ -48,7 +48,36 @@
           - yum-plugin-remove-with-leaves
           - rsyslog-relp
           - wget
+          - chrony
           
+    - name: get bat latest version
+      block:
+        - shell: curl --silent "https://api.github.com/repos/sharkdp/bat/releases/latest" | grep -Po '"tag_name"':' "\K.*?(?=")' warn=false
+          register: latest_release
+        - get_url:
+            url: https://github.com/sharkdp/bat/releases/download/{{latest_release.stdout}}/bat-{{latest_release.stdout}}-x86_64-unknown-linux-musl.tar.gz
+            dest: /tmp
+        - unarchive:
+            src: bat-{{latest_release.stdout}}-x86_64-unknown-linux-musl.tar.gz
+            dest: /tmp
+        - copy:
+            src: /tmp/bat-{{latest_release.stdout}}-x86_64-unknown-linux-musl/
+            dest: /usr/local/bat/
+            mode: preserve
+        - lineinfile:
+            path: ~/.bashrc
+            line: "alias bat='/usr/local/bat/bat'"
+            insertafter: 'mv'
+        - find:
+            paths: /tmp
+            file_type: any
+            patterns: bat*
+          register: bat_files_delete      
+        - file:
+            path: "{{ item.path }}"
+            state: absent
+          with_items: "{{ bat_files_delete.files }}"
+
     - name: add color ip output to global alias
       copy:
         dest: "/etc/profile.d/colorip.sh"
@@ -73,6 +102,14 @@
         - test sshd config
         - restart sshd
 
+    - name: clear tmp directory 
+      file:
+        state: "{{ item }}"
+        path: "/tmp/"
+      with_items:
+        - absent
+        - directory 
+
   handlers:
     - name: test sshd config
       command: sshd -t
@@ -81,3 +118,5 @@
       service: 
         name: sshd
         state: restarted  
+
+
