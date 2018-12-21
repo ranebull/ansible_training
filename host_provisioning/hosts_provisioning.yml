@@ -49,6 +49,7 @@
           - rsyslog-relp
           - wget
           - chrony
+          - rsync
           
     - name: get bat latest version
       block:
@@ -60,10 +61,10 @@
         - unarchive:
             src: bat-{{latest_release.stdout}}-x86_64-unknown-linux-musl.tar.gz
             dest: /tmp
-        - copy:
+        - synchronize:
             src: /tmp/bat-{{latest_release.stdout}}-x86_64-unknown-linux-musl/
             dest: /usr/local/bat/
-            mode: preserve
+          delegate_to: "{{ inventory_hostname }}"
         - lineinfile:
             path: ~/.bashrc
             line: "alias bat='/usr/local/bat/bat'"
