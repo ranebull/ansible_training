@@ -7,8 +7,46 @@
         name: '*'
         state: latest
   
-    - name: enable some repos
-      shell: yum-config-manager --enable ol7_developer_EPEL ol7_addons ol7_optional_latest
+    - name: Enable Oracle repos
+      block: 
+        - yum_repository:
+            name: ol7_developer_EPEL
+            description: Oracle Linux $releasever Development Packages ($basearch)
+            file: oracle-epel-ol7
+            baseurl: https://yum$ociregion.oracle.com/repo/OracleLinux/OL7/developer_EPEL/$basearch/
+            gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
+            gpgcheck: yes
+            enabled: yes
+
+        - yum_repository:
+            name: ol7_optional_latest
+            description: Oracle Linux $releasever Optional Latest ($basearch)
+            file: oracle-linux-ol7
+            baseurl: https://yum$ociregion.oracle.com/repo/OracleLinux/OL7/optional/latest/$basearch/
+            gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
+            gpgcheck: yes
+            enabled: yes
+
+        - yum_repository:
+            name: ol7_addons
+            description: Oracle Linux $releasever Add ons ($basearch)
+            file: oracle-linux-ol7
+            baseurl: https://yum$ociregion.oracle.com/repo/OracleLinux/OL7/addons/$basearch/
+            gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
+            gpgcheck: yes
+            enabled: yes
+
+    - name: add bat repo
+      yum_repository:
+        name: sattellite-bat
+        description: Copr repo for bat owned by sattellite
+        file: sattellite-bat-epel-7
+        enabled: yes
+        baseurl: https://copr-be.cloud.fedoraproject.org/results/sattellite/bat/epel-7-$basearch/
+        gpgkey: https://copr-be.cloud.fedoraproject.org/results/sattellite/bat/pubkey.gpg 
+        gpgcheck: yes
+        repo_gpgcheck: no
+        skip_if_unavailable: true
 
     - name: install additional packages
       yum:
@@ -17,6 +55,7 @@
           - mc
           - htop
           - atop
+          - bat
           - tmux
           - screen
           - sysstat
@@ -91,5 +130,3 @@
       service: 
         name: sshd
         state: restarted  
-
-
