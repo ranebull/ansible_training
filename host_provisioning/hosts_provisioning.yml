@@ -51,44 +51,44 @@
     - name: install additional packages
       yum:
         name: 
-          - ncdu
-          - mc
-          - htop
           - atop
           - bat
-          - tmux
-          - screen
-          - sysstat
-          - iotop
-          - lsof
-          - tcpdump
-          - nmap
-          - nano
-          - vim
-          - telnet
-          - strace
-          - ltrace
-          - gdisk
-          - traceroute
-          - lsscsi 
-          - pciutils
-          - net-tools  
-          - sysfsutils
-          - elinks
-          - kexec-tools
-          - redhat-lsb-core
           - bind-utils
-          - sos
-          - lynis
-          - policycoreutils-python
-          - smem
-          - setools-console
           - blktrace
-          - yum-plugin-remove-with-leaves
-          - rsyslog-relp
-          - wget
           - chrony
+          - elinks
+          - gdisk
+          - htop
+          - iotop
+          - kexec-tools
+          - lsof
+          - lsscsi 
+          - ltrace
+          - lynis
+          - mc
+          - nano
+          - ncdu
+          - net-tools  
+          - nmap
+          - pciutils
+          - policycoreutils-python
+          - redhat-lsb-core
           - rsync
+          - rsyslog-relp
+          - screen
+          - setools-console
+          - smem
+          - sos
+          - strace
+          - sysfsutils
+          - sysstat
+          - tcpdump
+          - telnet
+          - tmux
+          - traceroute
+          - vim
+          - wget
+          - yum-plugin-remove-with-leaves
           
     - name: add color ip output to global alias
       copy:
