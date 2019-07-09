@@ -69,6 +69,7 @@
           - lynis
           - policycoreutils-python
           - smem
+          - libselinux-python
           - setools-console
           - blktrace
           - yum-plugin-remove-with-leaves
