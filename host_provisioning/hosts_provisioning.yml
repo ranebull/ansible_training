@@ -6,13 +6,13 @@
       yum:
         name: '*'
         state: latest
-  
+
     - name: Enable Oracle repos
       block: 
         - yum_repository:
             name: ol7_developer_EPEL
             description: Oracle Linux $releasever Development Packages ($basearch)
-            file: oracle-epel-ol7
+            file: public-yum-ol7
             baseurl: https://yum$ociregion.oracle.com/repo/OracleLinux/OL7/developer_EPEL/$basearch/
             gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
             gpgcheck: yes
@@ -21,7 +21,7 @@
         - yum_repository:
             name: ol7_optional_latest
             description: Oracle Linux $releasever Optional Latest ($basearch)
-            file: oracle-linux-ol7
+            file: public-yum-ol7
             baseurl: https://yum$ociregion.oracle.com/repo/OracleLinux/OL7/optional/latest/$basearch/
             gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
             gpgcheck: yes
@@ -30,65 +30,52 @@
         - yum_repository:
             name: ol7_addons
             description: Oracle Linux $releasever Add ons ($basearch)
-            file: oracle-linux-ol7
+            file: public-yum-ol7
             baseurl: https://yum$ociregion.oracle.com/repo/OracleLinux/OL7/addons/$basearch/
             gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
             gpgcheck: yes
             enabled: yes
 
-    - name: add bat repo
-      yum_repository:
-        name: sattellite-bat
-        description: Copr repo for bat owned by sattellite
-        file: sattellite-bat-epel-7
-        enabled: yes
-        baseurl: https://copr-be.cloud.fedoraproject.org/results/sattellite/bat/epel-7-$basearch/
-        gpgkey: https://copr-be.cloud.fedoraproject.org/results/sattellite/bat/pubkey.gpg 
-        gpgcheck: yes
-        repo_gpgcheck: no
-        skip_if_unavailable: true
-
     - name: install additional packages
       yum:
         name: 
-          - atop
-          - bat
-          - bind-utils
-          - blktrace
-          - chrony
-          - elinks
-          - gdisk
-          - htop
-          - iotop
-          - kexec-tools
-          - lsof
-          - lsscsi 
-          - ltrace
-          - lynis
-          - mc
-          - nano
           - ncdu
-          - net-tools  
-          - nmap
-          - pciutils
-          - policycoreutils-python
-          - redhat-lsb-core
-          - rsync
-          - rsyslog-relp
-          - screen
-          - setools-console
-          - smem
-          - sos
-          - strace
-          - sysfsutils
-          - sysstat
-          - tcpdump
-          - telnet
+          - mc
+          - htop
+          - atop
           - tmux
-          - traceroute
+          - screen
+          - sysstat
+          - iotop
+          - lsof
+          - tcpdump
+          - nmap
+          - nano
           - vim
-          - wget
+          - telnet
+          - strace
+          - ltrace
+          - gdisk
+          - traceroute
+          - lsscsi 
+          - pciutils
+          - net-tools  
+          - sysfsutils
+          - elinks
+          - kexec-tools
+          - redhat-lsb-core
+          - bind-utils
+          - sos
+          - lynis
+          - policycoreutils-python
+          - smem
+          - setools-console
+          - blktrace
           - yum-plugin-remove-with-leaves
+          - rsyslog-relp
+          - wget
+          - chrony
+          - rsync
           
     - name: add color ip output to global alias
       copy:
