@@ -89,7 +89,14 @@
           - vim
           - wget
           - yum-plugin-remove-with-leaves
-          
+
+    - name: tune bashrc
+      blockinfile:
+        path: /root/.bashrc
+        block: |
+          export HISTTIMEFORMAT="%d/%m/%y %T "
+          export HISTFILESIZE=10000
+                    
     - name: add color ip output to global alias
       copy:
         dest: "/etc/profile.d/colorip.sh"
