@@ -8,7 +8,7 @@
         state: latest
 
     - name: Enable Oracle repos
-      block: 
+      block:
         - yum_repository:
             name: ol7_developer_EPEL
             description: Oracle Linux $releasever Development Packages ($basearch)
@@ -35,10 +35,11 @@
             gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
             gpgcheck: yes
             enabled: yes
+      when: ansible_distribution == 'OracleLinux'      
 
     - name: install additional packages
       yum:
-        name: 
+        name:
           - ncdu
           - mc
           - htop
@@ -57,9 +58,9 @@
           - ltrace
           - gdisk
           - traceroute
-          - lsscsi 
+          - lsscsi
           - pciutils
-          - net-tools  
+          - net-tools
           - sysfsutils
           - elinks
           - kexec-tools
@@ -74,6 +75,7 @@
           - blktrace
           - bash-completion
           - yum-plugin-remove-with-leaves
+          - wget
 
     - name: tune bashrc
       blockinfile:
@@ -81,7 +83,7 @@
         block: |
           export HISTTIMEFORMAT="%d/%m/%y %T "
           export HISTFILESIZE=10000
-                    
+
     - name: add color ip output to global alias
       copy:
         dest: "/etc/profile.d/colorip.sh"
@@ -94,31 +96,31 @@
         path: /etc/profile.d/colorls.sh
         regexp: 'ls -l'
         replace: 'ls -al'
-        
-    - name: generate sshd config 
+
+    - name: generate sshd config
       template:
         src: "sshd_config.j2"
         dest: "/etc/ssh/sshd_config"
         owner: "root"
         group: "root"
         mode: "0644"
-      notify: 
+      notify:
         - test sshd config
         - restart sshd
 
-    - name: clear tmp directory 
-      file:
-        state: "{{ item }}"
-        path: "/tmp/"
-      with_items:
-        - absent
-        - directory 
+#    - name: clear tmp directory
+#      file:
+#        state: "{{ item }}"
+#        path: "/tmp/"
+#      with_items:
+#        - absent
+#        - directory
 
   handlers:
     - name: test sshd config
       command: sshd -t
 
     - name: restart sshd
-      service: 
+      service:
         name: sshd
-        state: restarted  
+        state: restarted
