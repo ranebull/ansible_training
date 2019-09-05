@@ -35,47 +35,108 @@
             gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
             gpgcheck: yes
             enabled: yes
-      when: ansible_distribution == 'OracleLinux'      
+      when: ansible_distribution == 'OracleLinux'
+
+    # - name: Enable RHSM Repos
+    #   rhsm_repository:
+    #     name: 
+    #       - rhel-7-server-rpms
+    #       - rhel-7-server-extras-rpms
+    #       - rhel-7-server-fastrack-rpms
+    #       - rhel-7-server-optional-rpms
+    #   when: ansible_distribution == 'RedHat'
+
+    - name: Enable RedHat repos
+      block:
+        - yum_repository:
+            name: epel
+            description: Extra Packages for Enterprise Linux 7 - $basearch
+            file: epel
+            metalink: https://mirrors.fedoraproject.org/metalink?repo=epel-7&arch=$basearch
+            gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+            gpgcheck: yes
+            enabled: yes
+        - yum_repository:
+            name: rhel-7-server-extras-rpms
+            description: Red Hat Enterprise Linux 7 Server - Extras (RPMs)
+            metadata_expire: 86400
+            sslclientcert: /etc/pki/entitlement/5974877028371974863.pem
+            sslcacert: /etc/rhsm/ca/redhat-uep.pem
+            sslverify: 1
+            sslclientkey: /etc/pki/entitlement/5974877028371974863-key.pem
+            file: redhat
+            baseurl: https://cdn.redhat.com/content/dist/rhel/server/7/7Server/$basearch/extras/os
+            gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+            gpgcheck: yes
+            enabled: yes
+        - yum_repository:
+            name: rhel-7-server-fastrack-rpms
+            description: Red Hat Enterprise Linux 7 Server - Fastrack (RPMs)
+            metadata_expire: 86400
+            sslclientcert: /etc/pki/entitlement/5974877028371974863.pem
+            sslcacert: /etc/rhsm/ca/redhat-uep.pem
+            sslverify: 1
+            sslclientkey: /etc/pki/entitlement/5974877028371974863-key.pem
+            file: redhat
+            baseurl: https://cdn.redhat.com/content/fastrack/rhel/server/7/$basearch/os
+            gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+            gpgcheck: yes
+            enabled: yes
+        - yum_repository:
+            name: rhel-7-server-optional-rpms
+            description: Red Hat Enterprise Linux 7 Server - Optional (RPMs)
+            metadata_expire: 86400
+            sslclientcert: /etc/pki/entitlement/5974877028371974863.pem
+            sslcacert: /etc/rhsm/ca/redhat-uep.pem
+            sslverify: 1
+            sslclientkey: /etc/pki/entitlement/5974877028371974863-key.pem
+            file: redhat
+            baseurl: https://cdn.redhat.com/content/dist/rhel/server/7/$releasever/$basearch/optional/os
+            gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+            gpgcheck: yes
+            enabled: yes                    
+      when: ansible_distribution == 'RedHat'            
 
     - name: install additional packages
       yum:
         name:
-          - ncdu
-          - mc
-          - htop
           - atop
-          - tmux
-          - screen
-          - sysstat
-          - iotop
-          - lsof
-          - tcpdump
-          - nmap
-          - nano
-          - vim
-          - telnet
-          - strace
-          - ltrace
-          - gdisk
-          - traceroute
-          - lsscsi
-          - pciutils
-          - net-tools
-          - sysfsutils
-          - elinks
-          - kexec-tools
-          - redhat-lsb-core
           - bind-utils
-          - sos
-          - lynis
-          - policycoreutils-python
-          - smem
-          - libselinux-python
-          - setools-console
           - blktrace
-          - bash-completion
-          - yum-plugin-remove-with-leaves
+          - chrony
+          - elinks
+          - gdisk
+          - htop
+          - iotop
+          - kexec-tools
+          - lsof
+          - lsscsi 
+          - ltrace
+          - lynis
+          - mc
+          - nano
+          - ncdu
+          - net-tools  
+          - nmap
+          - pciutils
+          - policycoreutils-python
+          - redhat-lsb-core
+          - rsync
+          - rsyslog-relp
+          - screen
+          - setools-console
+          - smem
+          - sos
+          - strace
+          - sysfsutils
+          - sysstat
+          - tcpdump
+          - telnet
+          - tmux
+          - traceroute
+          - vim
           - wget
+          - yum-plugin-remove-with-leaves
 
     - name: tune bashrc
       blockinfile:
