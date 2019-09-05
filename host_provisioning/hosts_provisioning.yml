@@ -169,14 +169,6 @@
         - test sshd config
         - restart sshd
 
-#    - name: clear tmp directory
-#      file:
-#        state: "{{ item }}"
-#        path: "/tmp/"
-#      with_items:
-#        - absent
-#        - directory
-
   handlers:
     - name: test sshd config
       command: sshd -t
